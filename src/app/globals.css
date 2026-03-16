@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #4559F6;
+  --primary-dark: #1A1A26;
+  --gray-50: #FAFAFC;
+  --gray-100: #F5F5F7;
+  --gray-200: #E8E9EC;
+  --gray-300: #8C8D96;
+  --gray-400: #5A5B66;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--gray-50);
+  color: var(--primary-dark);
+}
