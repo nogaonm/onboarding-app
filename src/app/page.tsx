@@ -19,8 +19,8 @@ export default function HomePage() {
           <h1 className="text-4xl font-bold text-primary-dark mb-4">
             Bem-vindo ao O Novo Mercado
           </h1>
-          <p className="text-lg text-gray-300 mb-8">
-            Vamos descobrir o melhor caminho para você no digital.
+          <p className="text-lg text-gray-300 mb-8 max-w-xl mx-auto">
+            Vamos descobrir o melhor caminho para você no digital.<br />
             Responda algumas perguntas e receba um plano personalizado.
           </p>
           <button

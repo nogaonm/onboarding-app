@@ -3,8 +3,20 @@ import type {
   PlanoPersonalizado,
   Momento,
   Fase,
-  Acao
+  Acao,
+  Barreira
 } from '@/types/onboarding';
+
+// Tipo interno — aulas de apoio são convertidas em Acao antes de entrar no plano
+interface AulaApoioInterna {
+  id: string;
+  titulo: string;
+  descricao: string;
+  conteudoSuporte: { tipo: 'curso' | 'aula' | 'material'; titulo: string; descricao: string; fonte: string };
+  tarefaContextualizada: string;
+  criterioConclusao: string;
+  barreiraOrigem: Barreira;
+}
 
 /**
  * Engine de mapeamento — Logica de Mapeamento - Social Media.md
@@ -53,7 +65,7 @@ function acaoCriarCarrosseis(urgente: boolean): Acao {
     id: 'exp1-carrosseis',
     titulo: 'Criar seus primeiros carrosséis profissionais',
     descricao: urgente
-      ? 'Você ainda não precisa ser especialista. O objetivo é criar seu primeiro carrossel — mesmo que imperfeito. É a sua primeira peça de portfólio.'
+      ? 'Você ainda não precisa ser especialista. O objetivo é criar seu primeiro carrossel, mesmo que imperfeito. Essa será a sua primeira peça de portfólio.'
       : 'O formato mais acessível para começar a produzir e montar portfólio.',
     conteudoSuporte: { tipo: 'curso', titulo: 'Estrutura de Carrosséis', descricao: '8 elementos de copywriting para carrossel + 5 princípios de design + 12 estruturas prontas.', fonte: 'Curso Estrutura de Carrosséis' },
     tarefaEsperada: '1. Escolha 1 estrutura de carrossel (recomendamos "erros e acertos" ou "checklist")\n2. Crie 1 carrossel de 5+ slides aplicando os 8 elementos de copy e os 5 princípios de design\n3. Use o Canva para montar as peças visuais\n4. Publique nas suas redes ou na comunidade',
@@ -63,7 +75,7 @@ function acaoCriarCarrosseis(urgente: boolean): Acao {
     ],
     orientacoesComunidade: [
       'Publique seu carrossel na comunidade e pergunte: "O gancho do slide 1 faz vocês quererem continuar lendo? O que melhoraria?"',
-      'Veja carrosséis de outros membros e comente o que chamou sua atenção — treina seu olhar crítico.',
+      'Veja carrosséis de outros membros e comente o que chamou sua atenção. Isso treina seu olhar crítico.',
     ],
     criterioConclusao: 'Você terminou quando tiver 1 carrossel de 5+ slides criado no Canva, revisado com ajuda da Omnia e publicado. Não precisa ser perfeito. Precisa existir.',
   };
@@ -164,9 +176,9 @@ function acaoEsteiraPSM(): Acao {
   return {
     id: 'vender-psm',
     titulo: 'Estruturar seu serviço com o Método PSM',
-    descricao: 'Transformar sua entrega em um produto com Instalação + Manutenção, recorrência previsível e preço por valor — não por hora.',
+    descricao: 'Transformar sua entrega em um produto com Instalação + Manutenção, recorrência previsível e preço por valor, não por hora.',
     conteudoSuporte: { tipo: 'curso', titulo: 'Método PSM — Prospectar, Servir, Manter', descricao: 'Como produtizar o serviço de Social Media no modelo Instalação + Manutenção, criar isca de valor e estruturar recorrência com 5–7 clientes.', fonte: 'Curso Método PSM' },
-    tarefaEsperada: '1. Defina a transformação que você entrega (não a lista de tarefas)\n2. Separe seu serviço em Instalação (fase intensiva) e Manutenção (contrato recorrente) — com escopo e preço de cada\n3. Crie sua isca de valor (ex: diagnóstico gratuito do perfil)\n4. Calcule preço mínimo: despesas mensais ÷ horas disponíveis',
+    tarefaEsperada: '1. Defina a transformação que você entrega (não a lista de tarefas)\n2. Separe seu serviço em Instalação (fase intensiva) e Manutenção (contrato recorrente), com escopo e preço de cada\n3. Crie sua isca de valor (ex: diagnóstico gratuito do perfil)\n4. Calcule preço mínimo: despesas mensais ÷ horas disponíveis',
     promptsOmnia: [
       'Me ajude a formatar meu serviço de Social Media no modelo Instalação + Manutenção do Método PSM. Meu nicho é [nicho].',
       'Crie uma isca de valor (diagnóstico gratuito) para eu usar na prospecção do nicho [nicho]. Quero algo que mostre minha expertise em 1 página.',
@@ -180,8 +192,8 @@ function acaoPescaEmBalde(): Acao {
   return {
     id: 'vender-pesca',
     titulo: 'Captar clientes com Pesca em Balde',
-    descricao: 'Encontrar e pescar clientes em grupos online segmentados usando iscas de conteúdo — sem tráfego pago, sem spam.',
-    conteudoSuporte: { tipo: 'curso', titulo: 'Tráfego Orgânico e Pesca em Balde', descricao: 'A internet não é um oceano — é um conjunto de baldes (grupos coesos). 4 passos: identificar grupos onde seu cliente ideal está → interagir genuinamente → criar iscas de conteúdo (posts que ensinam, não propaganda) → gerar interesse e iniciar conversas. Como avaliar balde bom vs. balde ruim.', fonte: 'Curso Pesca em Balde' },
+    descricao: 'Encontrar e pescar clientes em grupos online segmentados usando iscas de conteúdo, sem tráfego pago e sem spam.',
+    conteudoSuporte: { tipo: 'curso', titulo: 'Tráfego Orgânico e Pesca em Balde', descricao: 'A internet não é um oceano, é um conjunto de baldes (grupos coesos). 4 passos: identificar grupos onde seu cliente ideal está → interagir genuinamente → criar iscas de conteúdo (posts que ensinam, não propaganda) → gerar interesse e iniciar conversas. Como avaliar balde bom vs. balde ruim.', fonte: 'Curso Pesca em Balde' },
     tarefaEsperada: '1. Liste 5 grupos (Facebook, WhatsApp, comunidades pagas) onde seu cliente ideal está\n2. Avalie cada grupo: é balde bom (engajamento real, público qualificado) ou ruim (spam, sem moderação)?\n3. Crie 2 iscas de conteúdo (posts que ensinam ou inspiram, não propaganda) e publique nos melhores baldes\n4. Interaja genuinamente por 1 semana e registre quantas conversas iniciou',
     promptsOmnia: ['Me ajude a criar uma isca de conteúdo para pescar clientes em um grupo de [nicho]. A isca precisa ensinar algo útil, não parecer propaganda.'],
     orientacoesComunidade: ['Compartilhe na comunidade: "Comecei a pescar clientes com iscas de conteúdo em grupos. Publiquei X iscas e iniciei Y conversas. O que posso melhorar?"'],
@@ -193,7 +205,7 @@ function acaoProspecaoIA(): Acao {
   return {
     id: 'vender-ia-prosp',
     titulo: 'Prospectar clientes com IA',
-    descricao: 'Usar o framework PELI no ChatGPT para criar mensagens de prospecção personalizadas em volume — com a estratégia RAI (Reciprocidade + Autoridade Instantânea).',
+    descricao: 'Usar o framework PELI no ChatGPT para criar mensagens de prospecção personalizadas em volume, combinando com a estratégia RAI (Reciprocidade + Autoridade Instantânea).',
     conteudoSuporte: { tipo: 'curso', titulo: 'IA na Prospecção de Clientes', descricao: 'Framework PELI (Personagem, Exemplo, Linha de pensamento, Iteração) para gerar mensagens com IA. Estratégia RAI: entregar valor antes de pedir (Reciprocidade) com apresentação que transmita competência (Autoridade Instantânea). Script de 9 etapas para mensagem de abordagem. Onde encontrar prospects: Instagram, sites de depoimentos, comunidades, YouTube. Meta: 100 perfis/dia. Criar apresentações comerciais com Gamma + 3 técnicas de copy (FOMO, ancoragem, escassez).', fonte: 'Curso IA na Prospecção de Clientes' },
     tarefaEsperada: '1. Mapeie 10 leads reais em uma plataforma (Instagram, sites de depoimentos, comunidades)\n2. Use o PELI no ChatGPT para criar 1 mensagem personalizada para cada lead\n3. Itere pelo menos 3 versões da primeira mensagem antes de enviar\n4. Envie as 10 mensagens e registre a taxa de resposta',
     promptsOmnia: ['Use o framework PELI para criar uma mensagem de prospecção para um [tipo de negócio] do nicho [nicho]. Personagem: sou social media especialista em [área]. Exemplo: [cole referência]. Linha de pensamento: elogio real → observação estratégica → oferta de isca. Iteração: me dê 3 versões.'],
@@ -206,14 +218,14 @@ function acaoConduzirReuniao(): Acao {
   return {
     id: 'vender-reuniao',
     titulo: 'Conduzir reuniões de venda com o Método DEF',
-    descricao: 'Conduzir conversa de venda consultiva sem parecer que está vendendo — usando escuta ativa, perguntas abertas e o Método DEF (Descoberta, Encantamento, Fechamento).',
+    descricao: 'Conduzir conversa de venda consultiva sem parecer que está vendendo, usando escuta ativa, perguntas abertas e o Método DEF (Descoberta, Encantamento, Fechamento).',
     conteudoSuporte: { tipo: 'curso', titulo: 'Vendas 1:1 — Método DEF', descricao: 'Descoberta (50% escutando: entender a dor real do cliente com perguntas abertas, conexão genuína, PUV) → Encantamento (mostrar a solução vinculada ao que o cliente disse, usar storytelling e prova social) → Fechamento (definir próximo passo concreto, lidar com objeções: "está caro", "vou pensar", "vou falar com meu sócio"). Mentalidade: vendedor = guru que orienta, não empurra.', fonte: 'Curso Vendas 1:1 — Método DEF' },
     tarefaEsperada: '1. Prepare 10 perguntas abertas de Descoberta para sua reunião de SM (foco em entender a dor, não em apresentar o serviço)\n2. Conduza pelo menos 2 reuniões seguindo DEF: Descoberta → Encantamento → Fechamento\n3. Grave (com permissão) e analise: quanto % do tempo você falou vs. o cliente? (ideal: cliente fala 50%+)',
     promptsOmnia: [
       'Simule uma reunião de vendas DEF comigo. Você é um prospect do nicho [nicho] com objeções reais. Eu conduzo a reunião.',
       'Crie 10 perguntas de Descoberta para eu usar em reunião de vendas de Social Media com clientes do nicho [nicho].',
     ],
-    orientacoesComunidade: ['Peça roleplay na comunidade — um membro faz papel de cliente difícil. Treine a resposta às objeções "está caro" e "vou pensar".'],
+    orientacoesComunidade: ['Peça roleplay na comunidade: um membro faz o papel de cliente difícil. Treine a resposta às objeções "está caro" e "vou pensar".'],
     criterioConclusao: 'Você terminou quando tiver conduzido 2 reuniões DEF e identificado onde fugiu da estrutura.',
   };
 }
@@ -238,7 +250,7 @@ function acaoGptCliente(): Acao {
   return {
     id: 'ia-gpt',
     titulo: 'Configurar assistente de IA por cliente',
-    descricao: 'Criar um GPT personalizado por cliente — configurado com tom de voz, temas, vocabulário e restrições da marca — para automatizar tarefas repetitivas como copys, legendas e pautas.',
+    descricao: 'Criar um GPT personalizado por cliente, configurado com tom de voz, temas, vocabulário e restrições da marca, para automatizar tarefas repetitivas como copys, legendas e pautas.',
     conteudoSuporte: { tipo: 'curso', titulo: 'Criação de Agentes com GPT', descricao: 'Estrutura de prompt OCPC (Objetivo, Contexto, Processo, Critérios de saída). Como configurar GPTs no ChatGPT: nome, instruções, conversation starters e knowledge com brand guidelines do cliente. Casos de uso: agente de copy, de pauta, de briefing e de relatório.', fonte: 'Curso Criação de Agentes com GPT' },
     tarefaEsperada: '1. Escolha 1 cliente e reúna os materiais: brand guidelines, tom de voz, vocabulário proibido/permitido, exemplos de legendas\n2. Configure um GPT com OCPC: defina o Objetivo, o Contexto (nicho, público), o Processo (passo a passo) e os Critérios de saída (formato, tamanho)\n3. Adicione os materiais no Knowledge do GPT\n4. Teste com 3 inputs diferentes (1 legenda, 1 pauta, 1 copy de carrossel) e avalie a qualidade',
     promptsOmnia: ['Me ajude a montar as instruções OCPC para um GPT de copy para o cliente do nicho [nicho]. O tom de voz é [tom] e o público é [público].', 'Identifique 3 tarefas repetitivas da minha rotina de SM que poderiam ser automatizadas com um agente GPT.'],
@@ -251,7 +263,7 @@ function acaoFotografiaIA(): Acao {
   return {
     id: 'ia-foto',
     titulo: 'Criar fotografias profissionais com IA',
-    descricao: 'Usar Midjourney e DALL·E/Sora para criar imagens profissionais para clientes — ensaios fotográficos, fotos de produto e imagens de campanha sem necessidade de estúdio.',
+    descricao: 'Usar Midjourney e DALL·E/Sora para criar imagens profissionais para clientes: ensaios fotográficos, fotos de produto e imagens de campanha sem necessidade de estúdio.',
     conteudoSuporte: { tipo: 'curso', titulo: 'Fotografia Profissional com IA', descricao: 'Midjourney (imagens cinematográficas, prompts em inglês) e DALL·E/Sora (integrado ao ChatGPT, aceita português). Anatomia de prompt eficaz: sujeito, composição, iluminação, estilo, atmosfera, câmera/lente. Freepik para ensaios fotográficos automatizados. Como oferecer ensaios com IA como serviço adicional.', fonte: 'Curso Fotografia Profissional com IA' },
     tarefaEsperada: '1. Crie um prompt detalhado de fotografia (sujeito + composição + iluminação + estilo + atmosfera) e gere 5 imagens no DALL·E ou Midjourney\n2. Identifique 2 clientes do seu portfólio que se beneficiariam de ensaios com IA\n3. Monte uma proposta de serviço adicional de ensaio fotográfico com IA',
     promptsOmnia: [
@@ -355,9 +367,9 @@ function acaoBrandingPessoal(): Acao {
   return {
     id: 'ref-branding',
     titulo: 'Consolidar posicionamento de marca pessoal',
-    descricao: 'Aplicar para si mesmo o que você faz para clientes: construir plataforma de marca pessoal com missão, diferencial intangível e público ideal.',
+    descricao: 'Aplicar para si o que você já faz para clientes: construir sua plataforma de marca pessoal com missão, diferencial intangível e público ideal.',
     conteudoSuporte: { tipo: 'curso', titulo: 'Branding e Posicionamento de Marca', descricao: 'Identidade vs. imagem de marca, diferencial intangível, plataforma de marca pessoal (missão, valores, público ideal), Lei de Pareto aplicada (20% dos clientes geram 80% dos resultados). Posicionamento: como a marca quer ser percebida vs. como é percebida de fato.', fonte: 'Curso Branding e Posicionamento de Marca' },
-    tarefaEsperada: '1. Responda as perguntas de posicionamento: "Quem sou? O que faço? Como faço? Por que faço? Para quem sou?"\n2. Identifique seu público ideal usando critérios objetivos (quem gera mais receita, quem é mais fiel)\n3. Defina seus diferenciais intangíveis — o que te faz único entre outros Social Media\n4. Documente 3 cases de resultado com: contexto, desafio, solução e resultados com números',
+    tarefaEsperada: '1. Responda as perguntas de posicionamento: "Quem sou? O que faço? Como faço? Por que faço? Para quem sou?"\n2. Identifique seu público ideal usando critérios objetivos (quem gera mais receita, quem é mais fiel)\n3. Defina seus diferenciais intangíveis, ou seja, o que faz você ser único entre outros Social Media\n4. Documente 3 cases de resultado com: contexto, desafio, solução e resultados com números',
     promptsOmnia: [
       'Me ajude a construir minha plataforma de marca pessoal como Social Media: missão, público ideal, diferenciais intangíveis e posicionamento.',
       'Me ajude a documentar um case de resultado para meu cliente do nicho [nicho]. Preciso: contexto, desafio, solução, resultado com números.',
@@ -402,7 +414,7 @@ function acaoRotierosProfissional(): Acao {
   return {
     id: 'con1-reels',
     titulo: 'Escrever roteiros de Reels com a Jornada Z',
-    descricao: 'Estruturar vídeos curtos com roteiro — Jornada Z + Teia da Criatividade — para nunca mais improvisar na frente da câmera.',
+    descricao: 'Estruturar vídeos curtos com roteiro usando a Jornada Z e a Teia da Criatividade, para nunca mais improvisar na frente da câmera.',
     conteudoSuporte: { tipo: 'curso', titulo: 'Roteiro para Reels', descricao: 'Jornada Z para estruturar o roteiro + Teia da Criatividade para gerar 9 pautas a partir de qualquer tema.', fonte: 'Curso Roteiro para Reels' },
     tarefaEsperada: '1. Use a Teia da Criatividade para gerar 9 pautas de Reels do seu nicho\n2. Escolha 2 pautas e escreva os roteiros completos com a Jornada Z\n3. Grave pelo menos 1 dos roteiros',
     promptsOmnia: [
@@ -427,6 +439,403 @@ function acaoCanvaProfissional(): Acao {
     orientacoesComunidade: ['Mostre seu brand kit na comunidade: "A paleta transmite a personalidade da marca? Parece profissional?"'],
     criterioConclusao: 'Você terminou quando tiver brand kit configurado e 2 peças criadas com identidade visual consistente.',
   };
+}
+
+// ─── CATÁLOGO DE AULAS DE APOIO — Mapa de Conexões — Aulas de Apoio.md ───
+
+function apoioPorOndeComecar(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-305',
+    titulo: 'Encontrar seu ponto de partida',
+    descricao: 'Descobrir por onde começar usando a Regra dos Terços e a distinção entre desejo e escolha.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Por Onde Começar', descricao: 'Regra dos Terços (1/3 vai dar certo, 1/3 razoável, 1/3 não funciona), diferença entre desejo e escolha, como encontrar propósito e direção.', fonte: 'Aula 305' },
+    tarefaContextualizada: 'Escreva 3 coisas que já sabe fazer no digital. Para cada uma, avalie: é desejo ou escolha? Defina 1 ação concreta para esta semana.',
+    criterioConclusao: 'Você terminou quando tiver listado 3 habilidades, classificado cada uma e definido 1 ação concreta para a semana.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioIniciativa(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-412',
+    titulo: 'Desenvolver iniciativa e proatividade',
+    descricao: 'Sair do "conforto do zero" e dar o primeiro passo com pequenas vitórias.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Como Ter Iniciativa', descricao: 'Conforto do zero (a inércia é confortável mas improdutiva), estratégia de pequenas vitórias, como ir além do esperado sem esperar permissão.', fonte: 'Aula 412' },
+    tarefaContextualizada: 'Identifique 1 situação esta semana onde pode ir além do esperado. Execute e registre o resultado.',
+    criterioConclusao: 'Você terminou quando tiver identificado a situação, agido e registrado o resultado.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioGestaoTarefas(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-383',
+    titulo: 'Organizar tarefas e prioridades',
+    descricao: 'Usar os 3 horizontes de planejamento para organizar o que precisa fazer.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Gestão de Tarefas', descricao: '3 horizontes de planejamento (dia, semana, mês), matriz de priorização, como sair da reatividade e entrar no planejamento.', fonte: 'Aula 383' },
+    tarefaContextualizada: 'Liste todas as tarefas pendentes e classifique nos 3 horizontes (dia, semana, mês). Priorize as 3 mais importantes do dia.',
+    criterioConclusao: 'Você terminou quando tiver todas as tarefas classificadas e as 3 prioridades do dia definidas.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioRotina(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-366',
+    titulo: 'Criar rotina produtiva com blocos de tempo',
+    descricao: 'Montar uma rotina que concilie trabalho e estudo usando blocos de tempo e a regra dos 2 minutos.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Conciliar Vida Pessoal e Trabalho', descricao: 'Blocos de tempo, regra dos 2 minutos, Os 7 Hábitos (Covey), como criar rotina sustentável sem burnout.', fonte: 'Aula 366' },
+    tarefaContextualizada: 'Monte sua rotina ideal da semana com blocos de tempo dedicados ao plano. Reserve pelo menos 2 blocos de 1 hora.',
+    criterioConclusao: 'Você terminou quando tiver sua rotina semanal montada com pelo menos 2 blocos de 1 hora dedicados ao plano.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioMedoVideo(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-415',
+    titulo: 'Perder o medo de aparecer em vídeo',
+    descricao: 'Técnicas práticas para superar o desconforto de se expor: Power Pose, prática deliberada e aceitação da imperfeição.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Medo de Falar em Vídeos', descricao: 'Power Pose (2 min antes de gravar), prática deliberada, gravar sem publicar como treino, lidar com julgamento e exposição.', fonte: 'Aula 415' },
+    tarefaContextualizada: 'Grave 1 vídeo de 30 segundos sobre algo que você domina. Não precisa publicar, apenas grave e assista.',
+    criterioConclusao: 'Você terminou quando tiver gravado e assistido ao vídeo de 30 segundos.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioTomadaDecisao(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-416',
+    titulo: 'Tomar decisões com mais segurança',
+    descricao: 'Usar árvore de decisão e reconhecer vieses cognitivos para decidir melhor em reuniões e negociações.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Tomada de Decisões', descricao: 'Vieses cognitivos (ancoragem, confirmação, disponibilidade), árvore de decisão, análise pré-mortem, decidir sob pressão sem paralisar.', fonte: 'Aula 416' },
+    tarefaContextualizada: 'Identifique 1 decisão pendente na sua jornada e aplique a árvore de decisão para escolher o melhor caminho.',
+    criterioConclusao: 'Você terminou quando tiver aplicado a árvore de decisão a 1 decisão pendente e feito a escolha.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioMetas(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-428',
+    titulo: 'Definir metas claras e mensuráveis',
+    descricao: 'Usar OKRs e o modelo NICE para criar metas que direcionam o aprendizado e mantêm a disciplina.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Definir Metas', descricao: 'OKRs (Objetivos e Key Results), modelo NICE (Próximo do coração, Inspiradora, Contextual, Energizante), revisão semanal e mensal.', fonte: 'Aula 428' },
+    tarefaContextualizada: 'Defina 1 meta para os próximos 30 dias usando o modelo NICE. Desdobre em 3 Key Results mensuráveis.',
+    criterioConclusao: 'Você terminou quando tiver 1 meta NICE definida com 3 Key Results mensuráveis.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioCriatividade(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-441',
+    titulo: 'Gerar ideias criativas para conteúdo',
+    descricao: 'Usar os Seis Chapéus de Pensamento e o Método Disney para criar conteúdo de forma estruturada.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Ideias Criativas', descricao: 'Seis Chapéus de Pensamento (De Bono), Método Disney (Sonhador, Realista, Crítico), como gerar ideias mesmo sem inspiração.', fonte: 'Aula 441' },
+    tarefaContextualizada: 'Escolha 1 tema e aplique os Seis Chapéus de Pensamento para gerar 6 abordagens diferentes de conteúdo.',
+    criterioConclusao: 'Você terminou quando tiver 6 abordagens diferentes geradas a partir de 1 tema.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioProcrastinacao(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-442',
+    titulo: 'Vencer a procrastinação',
+    descricao: 'Técnicas práticas para sair da inércia: Pomodoro, autorregulação e mindfulness aplicado à produtividade.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Vencer Procrastinação', descricao: 'Técnica Pomodoro (25 min foco + 5 min pausa), autorregulação emocional, mindfulness como ferramenta de foco, identificar gatilhos de procrastinação.', fonte: 'Aula 442' },
+    tarefaContextualizada: 'Aplique a técnica Pomodoro (25 min foco + 5 min pausa) por 1 dia inteiro e registre o que produziu.',
+    criterioConclusao: 'Você terminou quando tiver aplicado Pomodoro por 1 dia inteiro e registrado a produção.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioAprenderComFalhas(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-444',
+    titulo: 'Aprender com falhas e erros',
+    descricao: 'Transformar medo de errar em motor de aprendizado usando neurociência do erro e a zona de crescimento.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Aprender com Falhas', descricao: 'Neurociência do erro (errar ativa aprendizado), modelo FBI de feedback (Fato, Behavior, Impacto), 3 zonas (conforto, crescimento, pânico).', fonte: 'Aula 444' },
+    tarefaContextualizada: 'Liste 3 erros recentes e para cada um escreva: o que aprendi e o que faço diferente agora. Identifique em qual zona está.',
+    criterioConclusao: 'Você terminou quando tiver analisado 3 erros e identificado a zona em que está.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioComunicacaoLateral(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-com-lateral',
+    titulo: 'Comunicar-se melhor com clientes e colegas',
+    descricao: 'Praticar os 3 Cs (Clareza, Comunicação, Cooperação) e escuta ativa para construir rede de contatos.',
+    conteudoSuporte: { tipo: 'curso', titulo: 'Comunicação Lateral', descricao: '3 Cs (Clareza, Comunicação, Cooperação), escuta ativa e empatia, assertividade, comunicação não verbal.', fonte: 'Curso Comunicação Lateral' },
+    tarefaContextualizada: 'Pratique escuta ativa em 1 conversa esta semana: parafraseie o que a pessoa disse antes de responder.',
+    criterioConclusao: 'Você terminou quando tiver praticado escuta ativa em pelo menos 1 conversa.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioFeedback(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-feedback',
+    titulo: 'Dar e receber feedback com eficácia',
+    descricao: 'Identificar os 3 gatilhos que bloqueiam feedback e praticar feedback construtivo em reuniões de venda.',
+    conteudoSuporte: { tipo: 'curso', titulo: 'Dar e Receber Feedbacks', descricao: '3 gatilhos (verdade, relacionamento, identidade), feedback positivo e corretivo, como solicitar feedback específico.', fonte: 'Curso Dar e Receber Feedbacks' },
+    tarefaContextualizada: 'Dê 1 feedback positivo a alguém hoje usando fatos específicos. Identifique qual dos 3 gatilhos é mais forte em você.',
+    criterioConclusao: 'Você terminou quando tiver dado 1 feedback com fatos específicos e identificado seu gatilho principal.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioAdaptabilidade(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-adaptabilidade',
+    titulo: 'Desenvolver adaptabilidade',
+    descricao: 'Avaliar seu Quociente de Adaptabilidade e usar a ferramenta GROW para planejar adaptações.',
+    conteudoSuporte: { tipo: 'curso', titulo: 'Adaptabilidade', descricao: 'Quociente de Adaptabilidade (flexibilidade, curiosidade, coragem, resiliência), ferramenta GROW (Goals, Reality, Options, Wrap Up), mundo BANI.', fonte: 'Curso Adaptabilidade' },
+    tarefaContextualizada: 'Avalie seu QA (1 a 10) para cada elemento: flexibilidade, curiosidade, coragem, resiliência. Aplique GROW ao menor.',
+    criterioConclusao: 'Você terminou quando tiver avaliado os 4 elementos e aplicado GROW ao mais fraco.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioNetworking(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-405',
+    titulo: 'Construir sua rede de contatos',
+    descricao: 'Aprender técnicas práticas de networking para criar conexões profissionais que geram oportunidades.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'Como Fazer Networking', descricao: 'Como iniciar conversas, manter relacionamentos profissionais, networking em eventos e online, follow-up estratégico.', fonte: 'Aula 405' },
+    tarefaContextualizada: 'Identifique 3 pessoas do seu nicho que gostaria de conhecer. Inicie uma conversa genuína com pelo menos 1 delas esta semana.',
+    criterioConclusao: 'Você terminou quando tiver iniciado contato com pelo menos 1 pessoa da sua lista.',
+    barreiraOrigem: barreira,
+  };
+}
+
+function apoioTerrenoEhVoce(barreira: Barreira): AulaApoioInterna {
+  return {
+    id: 'apoio-378',
+    titulo: 'Reconhecer seu valor e construir autoconfiança',
+    descricao: 'Entender que o terreno é você: seus conhecimentos, experiências e perspectiva única são seu maior ativo profissional.',
+    conteudoSuporte: { tipo: 'aula', titulo: 'O Terreno É Você', descricao: 'Autoconhecimento como base profissional, identificar pontos fortes únicos, construir confiança a partir do que já sabe, parar de se comparar.', fonte: 'Aula 378' },
+    tarefaContextualizada: 'Liste 5 coisas que você já sabe fazer bem (mesmo que pareçam simples). Para cada uma, escreva como ela pode ser útil para um cliente.',
+    criterioConclusao: 'Você terminou quando tiver listado 5 habilidades e conectado cada uma a um benefício para o cliente.',
+    barreiraOrigem: barreira,
+  };
+}
+
+// ─── CONVERSÃO AulaApoioInterna → Acao ───
+
+function apoioParaAcao(apoio: AulaApoioInterna): Acao {
+  return {
+    id: apoio.id,
+    titulo: apoio.titulo,
+    descricao: apoio.descricao,
+    conteudoSuporte: apoio.conteudoSuporte,
+    tarefaEsperada: apoio.tarefaContextualizada,
+    promptsOmnia: [],
+    orientacoesComunidade: [],
+    criterioConclusao: apoio.criterioConclusao,
+  };
+}
+
+// ─── MAPEAMENTO BARREIRA → AULAS DE APOIO (com seleção por contexto) ───
+//
+// Barreiras COMPORTAMENTAIS têm múltiplos candidatos de apoio.
+// A função selecionarApoio escolhe o melhor com base nas outras respostas do usuário.
+// Barreiras TÉCNICAS retornam [] (o plano regular já resolve).
+
+interface CandidatoApoio {
+  gerar: (b: Barreira) => AulaApoioInterna;
+  /** Quando este candidato é preferido — verificado contra OnboardingAnswers */
+  quando?: (answers: OnboardingAnswers) => boolean;
+}
+
+type BarreiraApoioMap = Record<Barreira, CandidatoApoio[]>;
+
+const MAPA_APOIO: BarreiraApoioMap = {
+  // ─── COMPORTAMENTAIS (com candidatos + contexto) ───
+
+  nao_sei_comecar: [
+    // Se explorador ou sem clientes → "Por Onde Começar" (framework de direção)
+    { gerar: apoioPorOndeComecar, quando: (a) => a.momento === 'explorador' || a.clientes === 'nao' },
+    // Se já tem alguma noção mas trava na ação → "Iniciativa" (sair da inércia)
+    { gerar: apoioIniciativa },
+  ],
+
+  falta_tempo: [
+    // Se urgência alta → Gestão de Tarefas (priorização imediata)
+    { gerar: apoioGestaoTarefas, quando: (a) => a.urgencia === 'imediata' || a.urgencia === 'curto_prazo' },
+    // Se também tem procrastinação → Metas (OKRs para direcionar o pouco tempo)
+    { gerar: apoioMetas, quando: (a) => (a.barreiras ?? []).includes('procrastinacao') },
+    // Default → Rotina (blocos de tempo)
+    { gerar: apoioRotina },
+  ],
+
+  procrastinacao: [
+    // Sempre → Procrastinação (Pomodoro, autorregulação) — é direto no problema
+    { gerar: apoioProcrastinacao },
+  ],
+
+  medo_impostor: [
+    // Se explorador (começando do zero) → "O Terreno É Você" (construir confiança)
+    { gerar: apoioTerrenoEhVoce, quando: (a) => a.momento === 'explorador' || a.clientes === 'nao' },
+    // Se já tem clientes mas se sente inseguro → "Aprender com Falhas" (neurociência do erro)
+    { gerar: apoioAprenderComFalhas },
+  ],
+
+  falta_rede: [
+    // Se explorador ou sem presença → "Networking" (como iniciar do zero)
+    { gerar: apoioNetworking, quando: (a) => a.momento === 'explorador' || a.presencaDigital === 'zero' },
+    // Se já tem alguma presença → "Comunicação Lateral" (melhorar a comunicação existente)
+    { gerar: apoioComunicacaoLateral },
+  ],
+
+  // ─── TÉCNICAS — sem apoio extra (o plano regular já resolve) ───
+  falta_posicionamento: [],
+  dificuldade_atrair_clientes: [],
+  dificuldade_vender: [],
+  falta_conhecimento: [],
+  falta_ferramentas: [],
+};
+
+/** Seleciona o melhor apoio entre os candidatos, baseado no contexto do usuário */
+function selecionarApoio(
+  candidatos: CandidatoApoio[],
+  barreira: Barreira,
+  answers: OnboardingAnswers
+): AulaApoioInterna | null {
+  if (!candidatos.length) return null;
+
+  // Procurar o primeiro candidato cuja condição "quando" é true
+  for (const c of candidatos) {
+    if (c.quando && c.quando(answers)) {
+      return c.gerar(barreira);
+    }
+  }
+  // Se nenhuma condição específica bateu, usar o último (default/fallback)
+  const fallback = candidatos[candidatos.length - 1];
+  return fallback.gerar(barreira);
+}
+
+// ─── POSICIONAMENTO: onde inserir cada barreira ───
+//
+// 'inicio'  → posição 0 da fase (precisa resolver ANTES de qualquer ação)
+// 'fim'     → final da fase (complemento)
+//
+// Lógica:
+// - procrastinacao/nao_sei_comecar/medo_impostor/falta_tempo → início (bloqueia a execução)
+// - falta_conhecimento/falta_ferramentas → fim (complementa)
+// - dificuldade_atrair_clientes/dificuldade_vender → início da fase de vendas
+// - falta_posicionamento → início da fase de estratégia
+// - falta_rede → fim da fase de vendas
+
+type PosicaoInsercao = 'inicio' | 'fim';
+
+const POSICAO_BARREIRA: Record<Barreira, PosicaoInsercao> = {
+  procrastinacao: 'inicio',
+  nao_sei_comecar: 'inicio',
+  medo_impostor: 'inicio',
+  falta_tempo: 'inicio',
+  falta_posicionamento: 'inicio',
+  dificuldade_atrair_clientes: 'inicio',
+  dificuldade_vender: 'inicio',
+  falta_conhecimento: 'fim',
+  falta_ferramentas: 'fim',
+  falta_rede: 'fim',
+};
+
+// Barreiras que devem ser injetadas na fase que contém vendas (em vez de Fase 1)
+const BARREIRAS_FASE_VENDAS: Barreira[] = [
+  'dificuldade_atrair_clientes',
+  'dificuldade_vender',
+  'falta_rede',
+];
+
+// Barreiras que devem ser injetadas na fase que contém estratégia/branding
+const BARREIRAS_FASE_ESTRATEGIA: Barreira[] = [
+  'falta_posicionamento',
+];
+
+function identificarFaseAlvo(
+  fases: Fase[],
+  barreira: Barreira
+): number {
+  if (BARREIRAS_FASE_VENDAS.includes(barreira)) {
+    const idx = fases.findIndex(f =>
+      f.acoes.some(a =>
+        a.id.startsWith('vender-') || a.titulo.toLowerCase().includes('vend')
+      )
+    );
+    return idx >= 0 ? idx : 0;
+  }
+  if (BARREIRAS_FASE_ESTRATEGIA.includes(barreira)) {
+    const idx = fases.findIndex(f =>
+      f.acoes.some(a =>
+        a.id.startsWith('est-') || a.id.startsWith('ref-branding') ||
+        a.titulo.toLowerCase().includes('estratég') ||
+        a.titulo.toLowerCase().includes('linha editorial') ||
+        a.titulo.toLowerCase().includes('posicionamento')
+      )
+    );
+    return idx >= 0 ? idx : 0;
+  }
+  // Maioria das barreiras → Fase 1 (índice 0)
+  return 0;
+}
+
+// Máximo de ações por fase (R2: 3-4 passos, nunca mais)
+const MAX_ACOES_POR_FASE = 4;
+
+function aplicarAulasApoio(fases: Fase[], barreiras: Barreira[], answers: OnboardingAnswers): void {
+  if (!barreiras.length) return;
+
+  // 1. Para cada barreira comportamental, selecionar o melhor apoio pelo contexto
+  const injecoes: { faseIdx: number; posicao: PosicaoInsercao; acao: Acao }[] = [];
+  const idsVistos = new Set<string>();
+
+  for (const barreira of barreiras) {
+    const candidatos = MAPA_APOIO[barreira];
+    if (!candidatos || !candidatos.length) continue;
+
+    const apoio = selecionarApoio(candidatos, barreira, answers);
+    if (!apoio) continue;
+
+    if (idsVistos.has(apoio.id)) continue;
+    idsVistos.add(apoio.id);
+
+    const faseIdx = identificarFaseAlvo(fases, barreira);
+    const posicao = POSICAO_BARREIRA[barreira];
+    injecoes.push({ faseIdx, posicao, acao: apoioParaAcao(apoio) });
+  }
+
+  // 2. Máximo 1 aula de apoio por fase
+  const contadorPorFase = new Map<number, number>();
+  const injecoesFiltradas = injecoes.filter(({ faseIdx }) => {
+    const count = contadorPorFase.get(faseIdx) ?? 0;
+    if (count >= 1) return false;
+    contadorPorFase.set(faseIdx, count + 1);
+    return true;
+  });
+
+  // 3. Inserir na posição certa, garantindo que a fase nunca exceda MAX_ACOES_POR_FASE
+  for (const { faseIdx, posicao, acao } of injecoesFiltradas) {
+    const fase = fases[faseIdx];
+
+    // Se já está no limite, remover a última ação regular para dar espaço
+    if (fase.acoes.length >= MAX_ACOES_POR_FASE) {
+      if (posicao === 'inicio') {
+        fase.acoes.pop(); // Remove a última para manter o limite
+      } else {
+        fase.acoes.pop(); // Remove a última para substituir pelo apoio
+      }
+    }
+
+    if (posicao === 'inicio') {
+      fase.acoes.splice(0, 0, acao);
+    } else {
+      fase.acoes.push(acao);
+    }
+  }
 }
 
 // ─── OS 4 PLANOS — SEMPRE 3 FASES (R1) ───
@@ -455,7 +864,7 @@ function planoExplorador(urgente: boolean, critica: boolean, tempoLimitado: bool
       {
         numero: 2,
         titulo: 'Vender seu serviço',
-        descricao: 'Você precisa faturar — use as peças criadas como portfólio e vá atrás dos primeiros clientes.',
+        descricao: 'Você precisa faturar. Use as peças criadas como portfólio e vá atrás dos primeiros clientes.',
         acoes: [
           acaoEsteiraPSM(),
           acaoPescaEmBalde(),
@@ -538,7 +947,7 @@ function planoConstrutor(urgente: boolean): Fase[] {
       {
         numero: 2,
         titulo: 'Vender e captar clientes',
-        descricao: 'Você precisa faturar — estruture sua oferta e vá atrás dos primeiros clientes com as peças que criou.',
+        descricao: 'Você precisa faturar. Estruture sua oferta e vá atrás dos primeiros clientes com as peças que criou.',
         acoes: [
           acaoEsteiraPSM(),
           acaoPescaEmBalde(),
@@ -601,7 +1010,7 @@ function planoConstrutor(urgente: boolean): Fase[] {
   ];
 }
 
-function planoOperador(urgente: boolean, barreiras: string[]): Fase[] {
+function planoOperador(urgente: boolean, barreiras: Barreira[]): Fase[] {
   // SM-OPE: Já tem clientes recorrentes, já sabe entregar.
   // Lógica de conselheiro: a Fase 1 deve ser o que a pessoa MAIS PRECISA agora.
   //
@@ -634,7 +1043,7 @@ function planoOperador(urgente: boolean, barreiras: string[]): Fase[] {
     numero: 0,
     titulo: 'Escalar vendas e faturamento',
     descricao: vendaEhPrioridade
-      ? 'Você já sabe entregar e precisa faturar mais — essa é a prioridade. Escale vendas com novos clientes e mercado B2B.'
+      ? 'Você já sabe entregar e precisa faturar mais. Essa é a prioridade: escalar vendas com novos clientes e mercado B2B.'
       : 'Estruturar vendas mais sofisticadas e entrar no mercado B2B.',
     acoes: [
       acaoEsteiraPSM(),
@@ -648,7 +1057,7 @@ function planoOperador(urgente: boolean, barreiras: string[]): Fase[] {
   const faseIA: Fase = {
     numero: 0,
     titulo: 'Escalar com tecnologia',
-    descricao: 'Usar IA como ferramenta de escala — produzir mais sem sacrificar qualidade.',
+    descricao: 'Usar IA como ferramenta de escala para produzir mais sem sacrificar qualidade.',
     acoes: [
       acaoGptCliente(),
       acaoFotografiaIA(),
@@ -674,7 +1083,7 @@ function planoOperador(urgente: boolean, barreiras: string[]): Fase[] {
   return ordenadas;
 }
 
-function planoReferencia(urgente: boolean, barreiras: string[]): Fase[] {
+function planoReferencia(urgente: boolean, barreiras: Barreira[]): Fase[] {
   // SM-REF: Já é referência no mercado, clientes recorrentes, sabe entregar.
   // Lógica de conselheiro: a Fase 1 deve ser o que a pessoa MAIS PRECISA agora.
   //
@@ -707,7 +1116,7 @@ function planoReferencia(urgente: boolean, barreiras: string[]): Fase[] {
     numero: 0,
     titulo: 'Vendas de alto valor',
     descricao: vendaEhPrioridade
-      ? 'Você já é referência e precisa escalar faturamento — essa é a prioridade. Entre no B2B e aumente seu ticket.'
+      ? 'Você já é referência e precisa escalar faturamento. Essa é a prioridade: entrar no B2B e aumentar seu ticket.'
       : 'Vendas B2B, ticket premium e posicionamento como referência.',
     acoes: [
       acaoEsteiraPSM(),
@@ -750,17 +1159,17 @@ function planoReferencia(urgente: boolean, barreiras: string[]): Fase[] {
 function getMensagemBemVinda(momento: Momento, urgente: boolean, vendaEhPrioridade: boolean): string {
   if (momento === 'explorador') {
     return urgente
-      ? 'Você precisa de resultado rápido — e o melhor jeito de aprender Social Media é fazendo. Seu plano começa pela prática: criar conteúdo, montar portfólio e oferecer seu serviço. A teoria vem depois, como refinamento. Primeiro faz, depois melhora.'
-      : 'Essa jornada foi pensada para quem está começando e quer resultados práticos. Você vai aprender fazendo — primeiro cria, depois refina com estratégia. A prioridade é produzir suas primeiras entregas e começar a se posicionar para vender.';
+      ? 'Você precisa de resultado rápido, e o melhor jeito de aprender Social Media é fazendo. Seu plano começa pela prática: criar conteúdo, montar portfólio e oferecer seu serviço. A teoria vem depois, como refinamento. Primeiro faz, depois melhora.'
+      : 'Essa jornada foi pensada para quem está começando e quer resultados práticos. Você vai aprender fazendo: primeiro cria, depois refina com estratégia. A prioridade é produzir suas primeiras entregas e começar a se posicionar para vender.';
   }
   if (momento === 'construtor') {
     return urgente
       ? 'Você já sabe o que quer e precisa faturar. Sua jornada foca em produzir com qualidade profissional e ir atrás de clientes o mais rápido possível. A estratégia vem depois, como refinamento.'
-      : 'Você já sabe o que quer — agora é hora de estruturar. Sua jornada foca em produzir com qualidade profissional, organizar sua operação e captar clientes de forma consistente.';
+      : 'Você já sabe o que quer, e agora é hora de estruturar. Sua jornada foca em produzir com qualidade profissional, organizar sua operação e captar clientes de forma consistente.';
   }
   if (momento === 'operador') {
     if (vendaEhPrioridade) {
-      return 'Você já sabe entregar e tem clientes — mas precisa faturar mais. Seu plano começa direto por vendas: escalar a captação e entrar no mercado B2B. A otimização e a tecnologia vêm em seguida para sustentar o crescimento.';
+      return 'Você já sabe entregar e tem clientes, mas precisa faturar mais. Seu plano começa direto por vendas: escalar a captação e entrar no mercado B2B. A otimização e a tecnologia vêm em seguida para sustentar o crescimento.';
     }
     return urgente
       ? 'Você já produz e tem clientes. Sua jornada foca em otimizar o que já funciona e escalar vendas para aumentar o faturamento. A tecnologia vem como ferramenta de escala na sequência.'
@@ -768,11 +1177,46 @@ function getMensagemBemVinda(momento: Momento, urgente: boolean, vendaEhPriorida
   }
   // referencia
   if (vendaEhPrioridade) {
-    return 'Você já é referência no mercado — agora precisa converter essa autoridade em faturamento. Seu plano começa por vendas de alto valor e mercado B2B. A consolidação da marca e as ferramentas de IA vêm para sustentar esse crescimento.';
+    return 'Você já é referência no mercado e agora precisa converter essa autoridade em faturamento. Seu plano começa por vendas de alto valor e mercado B2B. A consolidação da marca e as ferramentas de IA vêm para sustentar esse crescimento.';
   }
   return urgente
     ? 'Você já é referência. Sua jornada foca em consolidar sua marca pessoal e entrar rapidamente em vendas de alto valor no mercado B2B. A IA avançada vem depois para escalar a produção.'
     : 'Você já é referência. Sua jornada foca em consolidar sua marca pessoal, usar IA avançada para escalar e entrar em vendas de alto valor no mercado B2B.';
+}
+
+function getPrimeiroPasso(fases: Fase[]): string {
+  const primeiraAcao = fases[0]?.acoes[0];
+  if (!primeiraAcao) return '';
+
+  const id = primeiraAcao.id;
+
+  // Explorador — criar carrosséis (urgente ou não)
+  if (id === 'exp1-carrosseis') {
+    return 'Seu primeiro resultado está na Ação 1 da Fase 1: criar seu primeiro carrossel. Não precisa ser perfeito, precisa existir. Essa será a sua primeira peça de portfólio e o ponto de partida para tudo que vem depois.';
+  }
+
+  // Construtor — carrosséis profissionais com 8 elementos de copy
+  if (id === 'con1-carrosseis') {
+    return 'Seu primeiro resultado está na Ação 1 da Fase 1: produzir carrosséis aplicando os 8 elementos de copy e os 5 princípios de design. É a peça que mostra que você entrega com qualidade profissional.';
+  }
+
+  // Operador / Referência — estruturar serviço com PSM (vendaEhPrioridade)
+  if (id === 'vender-psm') {
+    return 'Seu primeiro resultado está na Ação 1 da Fase 1: transformar seu serviço em um produto com Instalação + Manutenção usando o Método PSM. Isso é o que separa um freelancer de um profissional com recorrência previsível.';
+  }
+
+  // Operador — profissionalizar métricas (urgente ou sem urgência, barreira ≠ venda)
+  if (id === 'ope-metricas') {
+    return 'Seu primeiro resultado está na Ação 1 da Fase 1: montar seu dashboard de KPIs por cenário. Isso transforma achismo em decisão baseada em dados e mostra para o cliente que seu trabalho gera resultado mensurável.';
+  }
+
+  // Referência — consolidar marca pessoal (urgente ou sem urgência, barreira ≠ venda)
+  if (id === 'ref-branding') {
+    return 'Seu primeiro resultado está na Ação 1 da Fase 1: construir sua plataforma de marca pessoal com missão, diferencial e público ideal. É aplicar para si o que você já faz para clientes e se posicionar como referência no mercado.';
+  }
+
+  // Fallback genérico
+  return `Seu primeiro resultado está na Ação 1 da Fase 1: ${primeiraAcao.titulo.toLowerCase()}. Comece por aí e o restante do plano vai fazer sentido.`;
 }
 
 function getNomeJornada(momento: Momento): string {
@@ -798,7 +1242,7 @@ export function gerarPlanoPersonalizado(
   const urgente = answers.urgencia === 'imediata' || answers.urgencia === 'curto_prazo';
   const critica = answers.urgencia === 'imediata';
   const tempoLimitado = answers.tempo === 'menos_3h';
-  const barreiras = (answers.barreiras ?? []) as string[];
+  const barreiras = (answers.barreiras ?? []) as Barreira[];
   const vendaEhPrioridade = urgente && (
     barreiras.includes('dificuldade_vender') ||
     barreiras.includes('dificuldade_atrair_clientes')
@@ -820,11 +1264,15 @@ export function gerarPlanoPersonalizado(
       break;
   }
 
+  // Injetar aulas de apoio baseadas nas barreiras (v1.1)
+  aplicarAulasApoio(fases, barreiras, answers);
+
   return {
     perfil: 'Social Media',
     jornada: getNomeJornada(momento),
     momento,
     mensagemBemVinda: getMensagemBemVinda(momento, urgente, vendaEhPrioridade),
+    primeiroPasso: getPrimeiroPasso(fases),
     fases,
   };
 }

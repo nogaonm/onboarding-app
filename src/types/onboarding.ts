@@ -88,5 +88,6 @@ export interface PlanoPersonalizado {
   jornada: string;
   momento: Momento;
   mensagemBemVinda: string;
+  primeiroPasso: string;
   fases: Fase[];
 }

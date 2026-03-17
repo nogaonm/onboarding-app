@@ -41,11 +41,6 @@ export default function ObjetivoPage() {
       title: 'Desenvolver habilidades',
       description: 'Habilidades digitais para meu trabalho atual',
     },
-    {
-      value: 'outro',
-      title: 'Outro objetivo',
-      description: 'Tenho um objetivo diferente dos listados acima',
-    },
   ];
 
   const handleNext = () => {

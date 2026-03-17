@@ -6,6 +6,7 @@ interface OnboardingStore {
   answers: OnboardingAnswers;
   plano: PlanoPersonalizado | null;
   currentStep: number;
+  concluidos: string[];
   
   setAnswer: <K extends keyof OnboardingAnswers>(
     key: K,
@@ -13,6 +14,8 @@ interface OnboardingStore {
   ) => void;
   
   setPlano: (plano: PlanoPersonalizado) => void;
+  marcarConcluido: (id: string) => void;
+  isConcluido: (id: string) => boolean;
   nextStep: () => void;
   prevStep: () => void;
   reset: () => void;
@@ -20,10 +23,11 @@ interface OnboardingStore {
 
 export const useOnboardingStore = create<OnboardingStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       answers: {},
       plano: null,
       currentStep: 0,
+      concluidos: [],
       
       setAnswer: (key, value) =>
         set((state) => ({
@@ -31,6 +35,15 @@ export const useOnboardingStore = create<OnboardingStore>()(
         })),
       
       setPlano: (plano) => set({ plano }),
+
+      marcarConcluido: (id) =>
+        set((state) => ({
+          concluidos: state.concluidos.includes(id)
+            ? state.concluidos
+            : [...state.concluidos, id],
+        })),
+
+      isConcluido: (id) => get().concluidos.includes(id),
       
       nextStep: () =>
         set((state) => ({ currentStep: state.currentStep + 1 })),
@@ -41,7 +54,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
         })),
       
       reset: () =>
-        set({ answers: {}, plano: null, currentStep: 0 }),
+        set({ answers: {}, plano: null, currentStep: 0, concluidos: [] }),
     }),
     {
       name: 'onboarding-storage',

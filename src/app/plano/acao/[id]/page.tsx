@@ -51,20 +51,28 @@ function PromptCard({ text }: { text: string }) {
 export default function EspacoDeAulaPage() {
   const router = useRouter();
   const params = useParams();
-  const { plano } = useOnboardingStore();
+  const { plano, marcarConcluido, concluidos } = useOnboardingStore();
   const id = params?.id as string;
 
-  const todasAcoes: { acao: Acao; fase: Fase; indexFase: number; indexAcao: number }[] = [];
+  type ItemPlano = {
+    id: string;
+    acao: Acao;
+    fase: Fase;
+    indexFase: number;
+    indexItem: number;
+  };
+
+  const todosItens: ItemPlano[] = [];
   plano?.fases.forEach((fase, fi) => {
     fase.acoes.forEach((acao, ai) => {
-      todasAcoes.push({ acao, fase, indexFase: fi, indexAcao: ai });
+      todosItens.push({ id: acao.id, acao, fase, indexFase: fi, indexItem: ai });
     });
   });
 
-  const current = todasAcoes.find((x) => x.acao.id === id);
-  const currentGlobalIndex = todasAcoes.findIndex((x) => x.acao.id === id);
-  const prevAcao = currentGlobalIndex > 0 ? todasAcoes[currentGlobalIndex - 1] : null;
-  const nextAcao = currentGlobalIndex < todasAcoes.length - 1 ? todasAcoes[currentGlobalIndex + 1] : null;
+  const current = todosItens.find((x) => x.id === id);
+  const currentGlobalIndex = todosItens.findIndex((x) => x.id === id);
+  const prevAcao = currentGlobalIndex > 0 ? todosItens[currentGlobalIndex - 1] : null;
+  const nextAcao = currentGlobalIndex < todosItens.length - 1 ? todosItens[currentGlobalIndex + 1] : null;
 
   if (!plano || !current) {
     return (
@@ -82,8 +90,8 @@ export default function EspacoDeAulaPage() {
     );
   }
 
-  const { acao, fase, indexFase, indexAcao } = current;
-  const totalAcoesFase = fase.acoes.length;
+  const { fase, indexItem, acao } = current;
+  const totalItensFase = fase.acoes.length;
 
   return (
     <div className="min-h-screen bg-[#FAFAFC] flex flex-col">
@@ -104,21 +112,25 @@ export default function EspacoDeAulaPage() {
       </header>
 
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8 space-y-4">
-        {/* Header da ação */}
+        {/* Header */}
         <div className="bg-white rounded-2xl border border-[#E8E9EC] p-6">
           <div className="w-full h-1.5 bg-[#E8E9EC] rounded-full mb-6">
             <div
               className="h-full bg-[#4559F6] rounded-full transition-all"
-              style={{ width: `${((indexAcao + 1) / totalAcoesFase) * 100}%` }}
+              style={{ width: `${((indexItem + 1) / totalItensFase) * 100}%` }}
             />
           </div>
-          <h1 className="text-2xl font-bold text-[#1A1A26] mb-2">{acao.titulo}</h1>
-          <p className="text-sm text-[#8C8D96] leading-relaxed">{acao.descricao}</p>
+          <h1 className="text-2xl font-bold text-[#1A1A26] mb-2">
+            {acao.titulo}
+          </h1>
+          <p className="text-sm text-[#8C8D96] leading-relaxed">
+            {acao.descricao}
+          </p>
         </div>
 
-        {/* Conteúdo de suporte */}
-        {acao.conteudoSuporte && (
-          <SectionCard label="Conteúdo de suporte">
+        {/* Conteúdo */}
+        {acao.conteudoSuporte ? (
+          <SectionCard label="Conteúdo">
             <div className="space-y-5">
               {[acao.conteudoSuporte, ...(acao.conteudosAdicionais ?? [])].map((conteudo, idx) => (
                 <div key={idx} className={`flex gap-5 items-stretch ${idx > 0 ? 'pt-5 border-t border-[#E8E9EC]' : ''}`}>
@@ -147,7 +159,7 @@ export default function EspacoDeAulaPage() {
               ))}
             </div>
           </SectionCard>
-        )}
+        ) : null}
 
         {/* O que é esperado de você */}
         <SectionCard label="O que é esperado de você">
@@ -169,16 +181,23 @@ export default function EspacoDeAulaPage() {
 
         {/* Comunidade */}
         {acao.orientacoesComunidade.length > 0 && (
-          <SectionCard label="Mostre na comunidade">
-            <ul className="space-y-3">
-              {acao.orientacoesComunidade.map((item, i) => (
-                <li key={i} className="flex gap-3 text-sm text-[#5A5B66]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#4559F6] mt-2 flex-shrink-0" />
-                  <span className="leading-relaxed">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </SectionCard>
+          <a
+            href="https://comunidade.onovomercado.com/c/jornada-onm/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <SectionCard label="Mostre na comunidade">
+              <ul className="space-y-3">
+                {acao.orientacoesComunidade.map((item, i) => (
+                  <li key={i} className="flex gap-3 text-sm text-[#5A5B66]">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#4559F6] mt-2 flex-shrink-0" />
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </SectionCard>
+          </a>
         )}
 
         {/* Critério de conclusão */}
@@ -193,30 +212,46 @@ export default function EspacoDeAulaPage() {
           <div className="flex justify-start">
             {prevAcao && (
               <button
-                onClick={() => router.push(`/plano/acao/${prevAcao.acao.id}`)}
+                onClick={() => router.push(`/plano/acao/${prevAcao.id}`)}
                 className="px-5 py-3 rounded-xl border-2 border-[#E8E9EC] text-[#5A5B66] font-medium hover:border-[#4559F6] transition-colors text-sm"
               >
-                ← Ação anterior
+                ← Anterior
               </button>
             )}
           </div>
 
           <div className="flex justify-center">
-            <button
-              onClick={() => router.push('/plano')}
-              className="px-6 py-3 rounded-xl bg-[#4559F6] text-white font-semibold hover:bg-blue-600 transition-colors text-sm whitespace-nowrap"
-            >
-              Marcar como concluída ✓
-            </button>
+            {concluidos.includes(current.id) ? (
+              <span className="px-6 py-3 rounded-xl bg-gray-100 text-[#8C8D96] font-semibold text-sm whitespace-nowrap flex items-center gap-2">
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8.5l3.5 3.5 6.5-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Concluída
+              </span>
+            ) : (
+              <button
+                onClick={() => {
+                  marcarConcluido(current.id);
+                  if (nextAcao) {
+                    router.push(`/plano/acao/${nextAcao.id}`);
+                  } else {
+                    router.push('/plano');
+                  }
+                }}
+                className="px-6 py-3 rounded-xl bg-[#4559F6] text-white font-semibold hover:bg-blue-600 transition-colors text-sm whitespace-nowrap"
+              >
+                Marcar como concluída ✓
+              </button>
+            )}
           </div>
 
           <div className="flex justify-end">
             {nextAcao && (
               <button
-                onClick={() => router.push(`/plano/acao/${nextAcao.acao.id}`)}
+                onClick={() => router.push(`/plano/acao/${nextAcao.id}`)}
                 className="px-5 py-3 rounded-xl border-2 border-[#E8E9EC] text-[#5A5B66] font-medium hover:border-[#4559F6] transition-colors text-sm"
               >
-                Próxima ação →
+                Próxima →
               </button>
             )}
           </div>
